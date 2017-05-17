@@ -7,7 +7,7 @@ This package has been created to facilitate the use of
 yousido package with the following characteristics:
 
 - Response entities directly and auto serialize by JMS Serializer with group "GraphQL" only asking for data required
-- Easy way to create Queryes and mutations
+- Easy way to create Queries and Mutations
 - Command to auto generate types from entities
 - Command to validate Type with your response
 - Security per operation by roles declared in annotation
