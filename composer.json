@@ -1,0 +1,33 @@
+{
+    "name": "medlabmg/youshido-graphql-extended",
+    "type": "symfony-bundle",
+    "description": "It Extends youshido graphql bundle to use easily",
+    "keywords": ["graphQL"],
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Miguel García Doínguez",
+            "email": "miguelgd@mgdsoftware.es"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "youshido/graphql-bundle": "^1.2",
+        "symfony/framework-bundle": "~2.3|~3.0",
+        "jms/serializer-bundle": "^1.1"
+    },
+    "autoload": {
+        "psr-4": { "MedlabMG\\YoushidoGraphQLExtendedBundle\\": "" },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": { "MedlabMG\\YoushidoGraphQLExtendedBundle\\Tests\\": "Tests" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    }
+}

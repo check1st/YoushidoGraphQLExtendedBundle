@@ -1,0 +1,23 @@
+parameters:
+    graphql_extended.schema: "medlab.graphql.schema"
+
+    # Overwrite classes
+    graphql.processor.class: MedlabMG\YoushidoGraphQLExtendedBundle\Configuration\Processor
+
+
+services:
+    medlab.graphql.query_configurator:
+        class: MedlabMG\YoushidoGraphQLExtendedBundle\Configuration\QueryConfiguratorService
+
+    medlab.graphql.mutation_configurator:
+        class: MedlabMG\YoushidoGraphQLExtendedBundle\Configuration\MutationConfiguratorService
+
+    medlab.graphql.schema:
+        class: MedlabMG\YoushidoGraphQLExtendedBundle\Configuration\SchemaConfiguratorService
+        arguments: ["medlab.graphql.query_configurator", "@medlab.graphql.mutation_configurator"]
+
+    medlab.graphql.voter.generic_annotation:
+        class: MedlabMG\YoushidoGraphQLExtendedBundle\Security\Voter\GenericAnnotationVoter
+        arguments: ["%kernel.root_dir%", "%kernel.environment%", "@service_container"]
+        tags:
+            - { name: security.voter }
