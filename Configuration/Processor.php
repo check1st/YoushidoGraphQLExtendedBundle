@@ -6,6 +6,7 @@ namespace MedlabMG\YoushidoGraphQLExtendedBundle\Configuration;
 
 use MedlabMG\YoushidoGraphQLExtendedBundle\Exception\GraphQLValidatorException;
 use MedlabMG\YoushidoGraphQLExtendedBundle\JMS\Serializer\Naming\CamelCaseNamingStrategy;
+use Symfony\Component\Validator\ConstraintViolationInterface;
 
 class Processor extends \Youshido\GraphQLBundle\Execution\Processor
 {
@@ -28,15 +29,24 @@ class Processor extends \Youshido\GraphQLBundle\Execution\Processor
                     $camelCase = new CamelCaseNamingStrategy();
                     $errorInside = [];
 
+                    /** @var ConstraintViolationInterface $violation */
                     foreach ($error->getViolationList() as $violation ) {
-                        $errorInside[$camelCase->translateNameByString( $violation->getPropertyPath())] = $violation->getMessage() ;
+                        $key = $camelCase->translateNameByString( $violation->getPropertyPath());
+                        if (!isset($errorInside[$key])) {
+                            $errorInside[$key] = [];
+                        }
+
+                        $errorInside[$key] [] = [
+                            'message' => $violation->getMessage(),
+                            'code'    => $violation->getCode()
+                        ];
                     }
 
                     $errors[$error->getResolverName()] = $errorInside;
 
                 }else{
                     /** @var $error \Exception */
-                    $errors[] = $error->getMessage();
+                    $errors[] = [ 'message' => $error->getMessage()];
                 }
             }
 

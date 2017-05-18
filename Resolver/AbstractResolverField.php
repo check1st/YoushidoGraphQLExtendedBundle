@@ -172,10 +172,19 @@ abstract class AbstractResolverField extends AbstractContainerAwareField
         return $this->container->get($serviceName);
     }
 
-    protected function addViolation($message, $inputName, $valueInserted = null)
+    protected function addViolation($message, $inputName, $code=null, $valueInserted = null)
     {
         $this->violations->add(
-            new ConstraintViolation($message, '', [], null, $inputName, $valueInserted ?: $this->args->get($inputName))
+            new ConstraintViolation(
+                $message,
+                '',
+                [],
+                null,
+                $inputName,
+                $valueInserted ?: $this->args->get($inputName),
+                null,
+                $code
+            )
         );
     }
 
