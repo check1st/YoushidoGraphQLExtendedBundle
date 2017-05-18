@@ -4,7 +4,7 @@ YoushidoGraphQLExtendedBundle
 **At this moment YoushidoGraphQLExtendedBundle is in alpha version**
 
 This package has been created to facilitate the use of 
-yousido package with the following characteristics:
+yousido package with the following features:
 
 - Response entities directly and auto serialize by JMS Serializer with group "GraphQL" only asking for data required
 - Easy way to create Queries and Mutations
