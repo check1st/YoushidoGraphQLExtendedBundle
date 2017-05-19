@@ -47,21 +47,28 @@ class GraphQLGroupSerializerCommand extends ContainerAwareCommand
         $defaultNameSpace = $this->getContainer()->getParameter('medlab.graphql.entity_path_default');
 
         if (!class_exists($classNameSpace)) {
-            if (!class_exists($defaultNameSpace . $classNameSpace)) {
+            $defaultNameSpace = $defaultNameSpace .'\\'. $classNameSpace;
+            if (!class_exists($defaultNameSpace)) {
                 throw new \RuntimeException("Class doesn't exist '$classNameSpace'");
             }
-            $classNameSpace = $defaultNameSpace . $classNameSpace;
+            $classNameSpace = $defaultNameSpace;
         }
 
         list($propertiesToInsert, $propertiesToAddGroup) = $this->propertiesToInsertGroup($classNameSpace);
         $fileText = $this->getTextClassWithGroupsAdded($classNameSpace, $propertiesToInsert, $propertiesToAddGroup);
 
+        if (!$fileText) {
+            $this->output->writeln("<comment>[!] File not updated, $classNameSpace</comment>");
+            return 0;
+        }
+
         if ($this->dump) {
             $this->output->writeln($fileText);
-            return;
+            return 0;
         }
 
         file_put_contents($this->getAbsolutePath($classNameSpace), $fileText);
+        $this->output->writeln("<info>Updated $classNameSpace</info>");
     }
 
     /**
@@ -101,10 +108,14 @@ class GraphQLGroupSerializerCommand extends ContainerAwareCommand
      * @param $classEntity
      * @param \ReflectionProperty[] $propertiesReflection
      * @param \ReflectionProperty[] $propertiesToUpdateGroups
-     * @return string
+     * @return string|null
      */
     public function getTextClassWithGroupsAdded($classEntity, $propertiesReflection, $propertiesToUpdateGroups)
     {
+        if (!$propertiesReflection) {
+            return null;
+        }
+
         $handle = fopen($this->getAbsolutePath($classEntity), "r");
         $newFileArr = [];
 

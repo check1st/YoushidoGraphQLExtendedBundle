@@ -17,7 +17,8 @@ class Configuration implements ConfigurationInterface
         $tb
             ->root('youshido_graphql_extended')
                 ->children()
-                    ->scalarNode('entity_path_default')->defaultValue("\\AppBundle\\Entity\\")->end()
+                    ->scalarNode('entity_path_default')->defaultValue("AppBundle\\Entity\\")->end()
+                    ->scalarNode('types_path_default')->defaultValue("AppBundle\\GraphQL\\Type")->end()
                 ->end()
             ->end()
         ;

@@ -35,6 +35,9 @@ class GraphQLTypesGeneratorCommand extends ContainerAwareCommand
     /** @var bool  */
     private $recursive;
 
+    /** @var string */
+    private $saveFileRelativePath;
+
     /** @var array  */
     private $recursiveClassesVisited = [];
 
@@ -44,6 +47,7 @@ class GraphQLTypesGeneratorCommand extends ContainerAwareCommand
             ->setName('graphql:type:generator')
             ->setDescription('GraphQL generator Types')
             ->addArgument('classNameSpace', InputArgument::REQUIRED, "Class")
+            ->addOption('saveFileRelativePath', 's', InputOption::VALUE_OPTIONAL, "Save relative path")
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'remove if exist a file')
             ->addOption('dump', 'd', InputOption::VALUE_NONE, 'not save only print')
             ->addOption('recursive', 'r', InputOption::VALUE_NONE, 'Create all classes related')
@@ -52,10 +56,19 @@ class GraphQLTypesGeneratorCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
+
         $this->output      = $output;
         $this->forceOption = $input->getOption('force');
         $this->dump        = $input->getOption('dump');
         $this->recursive   = $input->getOption('recursive');
+        $this->saveFileRelativePath = $input->getOption('saveFileRelativePath') ?: $this->getContainer()->getParameter(
+            'medlab.graphql.types_path_default'
+        );
+
+        if (!$this->saveFileRelativePath) {
+            throw new \RuntimeException('Option "saveFileRelativePath" is required');
+        }
 
         $this->executeByClass($input->getArgument('classNameSpace'));
     }
@@ -72,10 +85,11 @@ class GraphQLTypesGeneratorCommand extends ContainerAwareCommand
         $defaultNameSpace = $this->getContainer()->getParameter('medlab.graphql.entity_path_default');
 
         if (!class_exists($classNameSpace)) {
-            if (!class_exists($defaultNameSpace . $classNameSpace)) {
+            $classNameSpaceDefault = $defaultNameSpace .'\\'. $classNameSpace;
+            if (!class_exists($classNameSpaceDefault)) {
                 throw new \RuntimeException("Class doesn't exist '$classNameSpace'");
             }
-            $classNameSpace = $defaultNameSpace . $classNameSpace;
+            $classNameSpace = $classNameSpaceDefault;
         }
 
         $arrayWithDefinitions = $this->getDefinitionFromEntity($classNameSpace);
@@ -97,8 +111,14 @@ class GraphQLTypesGeneratorCommand extends ContainerAwareCommand
             return;
         }
 
+        $path = dirname($absolutePath);
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+            $this->output->writeln("\n<info>[+] - $path</info>");
+        }
+
         file_put_contents($absolutePath, $template);
-        $this->output->writeln("\n<info>[+] - $absolutePath</info>");
+        $this->output->writeln("\n<info>[!] - Folder was created $absolutePath</info>");
     }
 
     public function getDefinitionFromEntity($classEntity)
@@ -342,7 +362,7 @@ EOT;
         $reflectionClass = new \ReflectionClass($classNameSpace);
 
         $className = $reflectionClass->getShortName().'Type';
-        $nameSpace = 'MedlabMG\\MedlabBundle\\GraphQL\\Type';
+        $nameSpace = $this->saveFileRelativePath;
 
         return [
             $className,

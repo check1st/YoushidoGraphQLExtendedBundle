@@ -8,11 +8,8 @@ use JMS\Serializer\Handler\HandlerRegistry;
 use JMS\Serializer\Naming\SerializedNameAnnotationStrategy;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
-use MedlabMG\MedlabBundle\Entity\User;
-use MedlabMG\MedlabBundle\Exception\MedLabValidationEntityException;
 use MedlabMG\YoushidoGraphQLExtendedBundle\Annotation\SecurityGraphQL;
 use MedlabMG\YoushidoGraphQLExtendedBundle\Exception\GraphQLValidatorException;
-use MedlabMG\YoushidoGraphQLExtendedBundle\Resolver\ParamBag;
 use MedlabMG\YoushidoGraphQLExtendedBundle\JMS\Serializer\ExclusionStrategy\ReadGraphQLFields;
 use MedlabMG\YoushidoGraphQLExtendedBundle\JMS\Serializer\Naming\CamelCaseNamingStrategy;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -140,11 +137,6 @@ abstract class AbstractResolverField extends AbstractContainerAwareField
         if (!is_object($user = $token->getUser())) {
             // e.g. anonymous authentication
             return;
-        }
-
-        if ($user && $this->container->getParameter('kernel.environment') === 'test') {
-            // This "refresh" is required because doctrine can't get current user correctly in our tests
-            $user = $this->getEM()->getRepository("MedlabMGMedlabBundle:User")->find($user->getId());
         }
 
         return $user;

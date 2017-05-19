@@ -63,7 +63,7 @@ And his logic..
 ```php
 // src/MedlabMG/MedlabBundle/GraphQL/Mutation/Security/SecurityCreateTokenField.php
     
-class SecurityCreateTokenField extends AbstractFieldMutation
+class SecurityCreateTokenField extends AbstractResolverField
 {
 
     public function buildParent(FieldConfig $config)
@@ -124,7 +124,7 @@ And his logic..
 ```php
     // src/MedlabMG/MedlabBundle/GraphQL/Query/Category/CategoryAllField.php
     
-    class CategoryAllField extends AbstractFieldQuery
+    class CategoryAllField extends AbstractResolverField
     {
     
         public function resolveParent($value, ResolveInfo $info)
@@ -150,13 +150,13 @@ Its easy add annotation in a class query or mutation
 
 ```php
 
-use MedlabMG\YoushidoGraphQLExtendedBundle\Resolver\AbstractFieldMutation;
+use MedlabMG\YoushidoGraphQLExtendedBundle\Resolver\AbstractResolverField;
 use MedlabMG\YoushidoGraphQLExtendedBundle\Annotation\SecurityGraphQL;
 
 /**
  * @SecurityGraphQL({"ROLE_GRAPHQL_STUDENT"})
  */
-class StudentProfileUpdateField extends AbstractFieldMutation
+class StudentProfileUpdateField extends AbstractResolverField
 {
    // ...
 }

@@ -21,6 +21,7 @@ class YoushidoGraphQLExtendedExtension extends Extension implements PrependExten
         );
 
         $container->setParameter('medlab.graphql.entity_path_default', $config['entity_path_default']);
+        $container->setParameter('medlab.graphql.types_path_default', $config['types_path_default']);
 
         $loader = new YamlFileLoader($container, new FileLocator(array(__DIR__.'/../Resources/config/')));
         $loader->load('config.yml');
