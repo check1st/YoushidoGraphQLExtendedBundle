@@ -10,6 +10,7 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
 use MedlabMG\YoushidoGraphQLExtendedBundle\Annotation\SecurityGraphQL;
 use MedlabMG\YoushidoGraphQLExtendedBundle\Exception\GraphQLValidatorException;
+use MedlabMG\YoushidoGraphQLExtendedBundle\Exception\ValidationEntityException;
 use MedlabMG\YoushidoGraphQLExtendedBundle\JMS\Serializer\ExclusionStrategy\ReadGraphQLFields;
 use MedlabMG\YoushidoGraphQLExtendedBundle\JMS\Serializer\Naming\CamelCaseNamingStrategy;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -65,7 +66,7 @@ abstract class AbstractResolverField extends AbstractContainerAwareField
 
         try{
             $result = $this->resolveParent($value, $info);
-        }catch (MedLabValidationEntityException $e){
+        }catch (ValidationEntityException $e){
             $this->throwFormViolationsException($e->getViolationList());
         }
 
