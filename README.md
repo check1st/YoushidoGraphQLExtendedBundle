@@ -26,6 +26,9 @@ add bundles youshido and extended
 // app/AppKernel.php
 
 $bundles = array(
+    // add jms serializer, it is required 
+    new JMS\SerializerBundle\JMSSerializerBundle(),
+    
     new Youshido\GraphQLBundle\GraphQLBundle(),
     new \MedlabMG\YoushidoGraphQLExtendedBundle\YoushidoGraphQLExtendedBundle(),
 );
